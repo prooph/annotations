@@ -1,0 +1,43 @@
+{
+    "name": "prooph/annotation",
+    "description": "Adds annotation support to prooph",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Michiel Rook",
+            "email": "mrook@php.net"
+        }
+    ],
+    "keywords": [
+        "prooph",
+        "annotation"
+    ],
+    "homepage": "http://getprooph.org/",
+    "license": "BSD-3-Clause",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": "^7.0",
+        "doctrine/annotations": "^1.3",
+        "prooph/common": "^3.7",
+        "prooph/event-sourcing": "^4.0",
+        "prooph/event-store": "^6.5",
+        "prooph/service-bus": "^5.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.0",
+        "prooph/bookdown-template": "^0.2.3",
+        "satooshi/php-coveralls": "^1.0",
+        "malukenho/docheader": "^0.1.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Prooph\\Annotation\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Prooph\\Annotation\\": "tests"
+        }
+    }
+}
