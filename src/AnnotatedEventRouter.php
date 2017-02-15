@@ -11,12 +11,25 @@ declare(strict_types=1);
 
 namespace Prooph\Annotation;
 
+use Prooph\Common\Event\ActionEvent;
+use Prooph\Common\Event\ActionEventEmitter;
+use Prooph\Common\Event\ActionEventListenerAggregate;
+use Prooph\Common\Event\DetachAggregateHandlers;
+use Prooph\ServiceBus\EventBus;
 use Prooph\ServiceBus\Exception\InvalidArgumentException;
 use Prooph\ServiceBus\Exception\RuntimeException;
-use Prooph\ServiceBus\Plugin\Router\EventRouter;
+use Prooph\ServiceBus\MessageBus;
+use Prooph\ServiceBus\Plugin\Router\MessageBusRouterPlugin;
 
-class AnnotatedEventRouter extends EventRouter
+class AnnotatedEventRouter implements MessageBusRouterPlugin, ActionEventListenerAggregate
 {
+    use DetachAggregateHandlers;
+    
+    /**
+     * @var EventHandlerInspector
+     */
+    protected $inspector;
+
     /**
      * @param object $delegate
      * @throws InvalidArgumentException
@@ -24,26 +37,39 @@ class AnnotatedEventRouter extends EventRouter
      */
     public function __construct($delegate)
     {
-        parent::__construct([]);
-        
-        $this->initializeHandlers($delegate);
+        $this->inspector = new EventHandlerInspector($delegate);
     }
 
     /**
-     * @param object $delegate
-     * @throws InvalidArgumentException
-     * @throws RuntimeException
+     * Handle route action event of a message bus dispatch
+     *
+     * @param ActionEvent $actionEvent
+     * @return void
      */
-    protected function initializeHandlers($delegate)
+    public function onRouteMessage(ActionEvent $actionEvent)
     {
-        foreach (AnnotationUtils::getAnnotatedMethodsWithAttributes(get_class($delegate), EventHandler::class) as list($method, $annotationAttributes)) {
-            /** @var \ReflectionMethod $method */
-            if ($annotationAttributes['eventName'] !== null) {
-                $eventName = $annotationAttributes['eventName'];
-            } else {
-                $eventName = (string) $method->getParameters()[0]->getType();
-            }
-            $this->route($eventName)->to(new EventHandlerInvoker($delegate, $method));
+        $messageName = (string)$actionEvent->getParam(MessageBus::EVENT_PARAM_MESSAGE_NAME);
+
+        if (empty($messageName)) {
+            return;
         }
+        
+        $invoker = $this->inspector->findMessageInvoker($messageName);
+        
+        if ($invoker === null) {
+            return;
+        }
+
+        $listeners = $actionEvent->getParam(EventBus::EVENT_PARAM_EVENT_LISTENERS, []);
+
+        $actionEvent->setParam(EventBus::EVENT_PARAM_EVENT_LISTENERS, $listeners + [$invoker]);
+    }
+
+    /**
+     * @param ActionEventEmitter $dispatcher
+     */
+    public function attach(ActionEventEmitter $dispatcher)
+    {
+        $this->trackHandler($dispatcher->attachListener(MessageBus::EVENT_ROUTE, [$this, "onRouteMessage"]));
     }
 }

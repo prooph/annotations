@@ -73,21 +73,3 @@ class AnnotatedCommandHandlerTest extends TestCase
         $this->handler->attach($emitter);
     }
 }
-
-class MockAggregate
-{
-    /**
-     * @CommandHandler(commandName="SomeOtherCommand")
-     */
-    public function __construct(Command $command)
-    {
-    }
-
-    /**
-     * @CommandHandler
-     */
-    public function handleSomething(Command $command)
-    {
-        
-    }
-}

@@ -75,13 +75,13 @@ class AnnotatedCommandHandler implements MessageBusRouterPlugin, ActionEventList
     }
     
     /**
-     * @param ActionEventEmitter $events
+     * @param ActionEventEmitter $dispatcher
      *
      * @return void
      */
-    public function attach(ActionEventEmitter $events)
+    public function attach(ActionEventEmitter $dispatcher)
     {
-        $this->trackHandler($events->attachListener(MessageBus::EVENT_ROUTE, [$this, "onRouteMessage"]));
+        $this->trackHandler($dispatcher->attachListener(MessageBus::EVENT_ROUTE, [$this, "onRouteMessage"]));
     }
 
     /**

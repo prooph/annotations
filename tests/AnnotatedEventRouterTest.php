@@ -10,14 +10,16 @@
 namespace Prooph\Annotation;
 
 use PHPUnit\Framework\TestCase;
+use Prooph\Common\Event\ActionEventEmitter;
 use Prooph\Common\Event\DefaultActionEvent;
+use Prooph\Common\Event\ListenerHandler;
 use Prooph\Common\Messaging\Message;
 use Prooph\ServiceBus\EventBus;
 use Prooph\ServiceBus\MessageBus;
 
 class AnnotatedEventRouterTest extends TestCase
 {
-    public function testShouldAddHandlersToRoute()
+    public function testShouldFindHandlerForEventMessage()
     {
         $projector = new class {
             /**
@@ -35,5 +37,38 @@ class AnnotatedEventRouterTest extends TestCase
         $event->setParam(MessageBus::EVENT_PARAM_MESSAGE_NAME, Message::class);
         $eventRouter->onRouteMessage($event);
         static::assertInstanceOf(EventHandlerInvoker::class, $event->getParam(EventBus::EVENT_PARAM_EVENT_LISTENERS)[0]);
+    }
+
+    public function testShouldNotFindHandlerForUnknownEventMessage()
+    {
+        $eventRouter = new AnnotatedEventRouter(null);
+
+        $event = new DefaultActionEvent('');
+        $event->setParam(MessageBus::EVENT_PARAM_MESSAGE_NAME, Message::class);
+        $eventRouter->onRouteMessage($event);
+        static::assertEmpty($event->getParam(EventBus::EVENT_PARAM_EVENT_LISTENERS));
+    }
+
+    public function testShouldNotFindHandlerForEmptyEventMessage()
+    {
+        $eventRouter = new AnnotatedEventRouter(null);
+
+        $event = new DefaultActionEvent('');
+        $event->setParam(MessageBus::EVENT_PARAM_MESSAGE_NAME, '');
+        $eventRouter->onRouteMessage($event);
+        static::assertEmpty($event->getParam(EventBus::EVENT_PARAM_EVENT_LISTENERS));
+    }
+
+    public function testShouldAttachToEmitter()
+    {
+        $emitter = $this->getMockBuilder(ActionEventEmitter::class)->getMock();
+
+        $emitter->expects(static::once())
+            ->method('attachListener')
+            ->willReturn($this->getMockBuilder(ListenerHandler::class)->getMock());
+
+        $eventRouter = new AnnotatedEventRouter(null);
+
+        $eventRouter->attach($emitter);
     }
 }
