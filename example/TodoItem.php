@@ -61,44 +61,6 @@ class UpdateTodo extends PostTodo
     protected $itemId;
 }
 
-class ReflectionScanningEvent extends AggregateChanged
-{
-    public function payload()
-    {
-        $payload = [];
-        $reflection = new ReflectionObject($this);
-
-        $props = $reflection->getProperties();
-
-        foreach ($props as $prop) {
-            if (strpos($prop->getDocComment(), '@Serialize') === false) {
-                continue;
-            }
-
-            $prop->setAccessible(true);
-            $payload[$prop->getName()] = $prop->getValue($this);
-        }
-
-        return $payload;
-    }
-
-    public function setPayload(array $payload)
-    {
-        $reflection = new ReflectionObject($this);
-
-        foreach ($payload as $key => $value) {
-            $prop = $reflection->getProperty($key);
-
-            if (!$prop || strpos($prop->getDocComment(), '@Serialize') === false) {
-                continue;
-            }
-
-            $prop->setAccessible(true);
-            $prop->setValue($this, $value);
-        }
-    }
-}
-
 class TodoPosted extends AggregateChanged
 {
     /**
