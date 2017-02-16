@@ -10,11 +10,10 @@
 namespace Prooph\Annotation;
 
 use PHPUnit\Framework\TestCase;
-use Prooph\Common\Event\ActionEventEmitter;
 use Prooph\Common\Event\DefaultActionEvent;
 use Prooph\Common\Event\ListenerHandler;
 use Prooph\Common\Messaging\Command;
-use Prooph\EventStore\Aggregate\AggregateRepository;
+use Prooph\EventSourcing\Aggregate\AggregateRepository;
 use Prooph\ServiceBus\MessageBus;
 
 class AnnotatedCommandHandlerTest extends TestCase
@@ -64,12 +63,12 @@ class AnnotatedCommandHandlerTest extends TestCase
     
     public function testShouldAttachToEmitter()
     {
-        $emitter = $this->getMockBuilder(ActionEventEmitter::class)->getMock();
+        $emitter = $this->getMockBuilder(MessageBus::class)->getMock();
         
         $emitter->expects(static::once())
-            ->method('attachListener')
+            ->method('attach')
             ->willReturn($this->getMockBuilder(ListenerHandler::class)->getMock());
         
-        $this->handler->attach($emitter);
+        $this->handler->attachToMessageBus($emitter);
     }
 }

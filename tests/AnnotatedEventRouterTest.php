@@ -61,14 +61,14 @@ class AnnotatedEventRouterTest extends TestCase
 
     public function testShouldAttachToEmitter()
     {
-        $emitter = $this->getMockBuilder(ActionEventEmitter::class)->getMock();
+        $emitter = $this->getMockBuilder(MessageBus::class)->getMock();
 
         $emitter->expects(static::once())
-            ->method('attachListener')
+            ->method('attach')
             ->willReturn($this->getMockBuilder(ListenerHandler::class)->getMock());
 
         $eventRouter = new AnnotatedEventRouter(null);
 
-        $eventRouter->attach($emitter);
+        $eventRouter->attachToMessageBus($emitter);
     }
 }

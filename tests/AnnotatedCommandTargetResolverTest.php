@@ -7,6 +7,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Prooph\Annotation;
 
 use PHPUnit\Framework\TestCase;
@@ -30,12 +32,12 @@ class AnnotatedCommandTargetResolverTest extends TestCase
                 return AnnotatedCommandTargetResolverTest::TARGET_ID;
             }
 
-            public function payload()
+            public function payload(): array
             {
                 return [];
             }
 
-            protected function setPayload(array $payload)
+            protected function setPayload(array $payload): void
             {
             }
         }));
@@ -51,12 +53,12 @@ class AnnotatedCommandTargetResolverTest extends TestCase
              */
             public $id = AnnotatedCommandTargetResolverTest::TARGET_ID;
 
-            public function payload()
+            public function payload(): array
             {
                 return [];
             }
 
-            protected function setPayload(array $payload)
+            protected function setPayload(array $payload): void
             {
             }
         }));
@@ -69,12 +71,12 @@ class AnnotatedCommandTargetResolverTest extends TestCase
         static::expectException(InvalidArgumentException::class);
         
         static::assertEquals(static::TARGET_ID, $resolver->resolveTarget(new class extends Command {
-            public function payload()
+            public function payload(): array
             {
                 return [];
             }
 
-            protected function setPayload(array $payload)
+            protected function setPayload(array $payload): void
             {
             }
         }));

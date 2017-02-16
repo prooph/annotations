@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Prooph\Annotation;
 
 use Prooph\Common\Messaging\Command;
-use Prooph\EventStore\Aggregate\AggregateRepository;
+use Prooph\EventSourcing\Aggregate\AggregateRepository;
 
 class AggregateCommandHandler
 {

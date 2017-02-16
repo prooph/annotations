@@ -2,6 +2,7 @@
 
 use Prooph\Annotation\AnnotatedAggregateRoot;
 use Prooph\Common\Messaging\Command;
+use Prooph\Common\Messaging\Message;
 use Prooph\EventSourcing\AggregateChanged;
 use Prooph\Annotation\EventHandler;
 use Prooph\Annotation\CommandHandler;
@@ -17,6 +18,7 @@ class PostTodo extends Command
     public function __construct($itemId)
     {
         $this->itemId = $itemId;
+        $this->init();
     }
 
     /**
@@ -36,7 +38,7 @@ class PostTodo extends Command
      *
      * @return array
      */
-    public function payload()
+    public function payload(): array
     {
         return ['itemId' => $this->itemId];
     }
@@ -47,7 +49,7 @@ class PostTodo extends Command
      * @param array $payload
      * @return void
      */
-    protected function setPayload(array $payload)
+    protected function setPayload(array $payload): void
     {
         $this->itemId = $payload['itemId'];
     }
@@ -64,7 +66,6 @@ class UpdateTodo extends PostTodo
 class TodoPosted extends AggregateChanged
 {
     /**
-     * @Serialize
      * @var string
      */
     private $itemId;
@@ -83,7 +84,7 @@ class TodoPosted extends AggregateChanged
         return $this->itemId;
     }
 
-    public function withMetadata(array $metadata)
+    public function withMetadata(array $metadata): Message
     {
         $event = clone $this;
         $event->metadata = $metadata;
@@ -91,7 +92,7 @@ class TodoPosted extends AggregateChanged
         return $event;
     }
 
-    public function withAddedMetadata($key, $value)
+    public function withAddedMetadata(string $key, $value): Message
     {
         $event = clone $this;
         $event->metadata[$key] = $value;
@@ -99,7 +100,7 @@ class TodoPosted extends AggregateChanged
         return $event;
     }
 
-    public function withVersion($version)
+    public function withVersion(int $version): AggregateChanged
     {
         $event = clone $this;
         $event->version = $version;
@@ -111,7 +112,6 @@ class TodoPosted extends AggregateChanged
 class TodoUpdated extends AggregateChanged
 {
     /**
-     * @Serialize
      * @var string
      */
     private $itemId;
@@ -130,7 +130,7 @@ class TodoUpdated extends AggregateChanged
         return $this->itemId;
     }
 
-    public function withMetadata(array $metadata)
+    public function withMetadata(array $metadata): Message
     {
         $event = clone $this;
         $event->metadata = $metadata;
@@ -138,7 +138,7 @@ class TodoUpdated extends AggregateChanged
         return $event;
     }
 
-    public function withAddedMetadata($key, $value)
+    public function withAddedMetadata(string $key, $value): Message
     {
         $event = clone $this;
         $event->metadata[$key] = $value;
@@ -146,7 +146,7 @@ class TodoUpdated extends AggregateChanged
         return $event;
     }
 
-    public function withVersion($version)
+    public function withVersion(int $version): AggregateChanged
     {
         $event = clone $this;
         $event->version = $version;
@@ -181,7 +181,7 @@ class TodoItem extends AnnotatedAggregateRoot
     /**
      * @return string representation of the unique identifier of the aggregate root
      */
-    protected function aggregateId()
+    protected function aggregateId(): string
     {
         return $this->itemId;
     }

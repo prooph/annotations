@@ -11,7 +11,7 @@ namespace Prooph\Annotation;
 
 use PHPUnit\Framework\TestCase;
 use Prooph\Common\Messaging\Command;
-use Prooph\EventStore\Aggregate\AggregateRepository;
+use Prooph\EventSourcing\Aggregate\AggregateRepository;
 
 class AggregateConstructorCommandHandlerTest extends TestCase
 {
@@ -21,7 +21,7 @@ class AggregateConstructorCommandHandlerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
         $aggregateRepository->expects(static::once())
-            ->method('addAggregateRoot');
+            ->method('saveAggregateRoot');
 
         $handler = new AggregateConstructorCommandHandler(MockHandler::class, $aggregateRepository);
         

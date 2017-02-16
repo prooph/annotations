@@ -11,7 +11,7 @@ namespace Prooph\Annotation;
 
 use PHPUnit\Framework\TestCase;
 use Prooph\Common\Messaging\Command;
-use Prooph\EventStore\Aggregate\AggregateRepository;
+use Prooph\EventSourcing\Aggregate\AggregateRepository;
 
 class AggregateCommandHandlerTest extends TestCase
 {
@@ -29,7 +29,7 @@ class AggregateCommandHandlerTest extends TestCase
             ->getMock();
         $commandTargetResolver->expects(static::once())
             ->method('resolveTarget')
-            ->willReturn(100);
+            ->willReturn('100');
 
         $aggregateRepository = $this->getMockBuilder(AggregateRepository::class)
             ->disableOriginalConstructor()

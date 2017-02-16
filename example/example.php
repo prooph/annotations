@@ -1,20 +1,27 @@
 <?php
 
+use Prooph\Annotation\AnnotatedCommandHandler;
+use Prooph\Annotation\AnnotatedCommandTargetResolver;
+use Prooph\Annotation\AnnotatedEventRouter;
 use Prooph\Common\Event\ProophActionEventEmitter;
+use Prooph\EventSourcing\Aggregate\AggregateRepository;
+use Prooph\EventSourcing\Aggregate\AggregateType;
 use Prooph\EventSourcing\EventStoreIntegration\AggregateTranslator;
-use Prooph\EventStore\Adapter\InMemoryAdapter;
-use Prooph\EventStore\Aggregate\AggregateRepository;
-use Prooph\EventStore\Aggregate\AggregateType;
-use Prooph\EventStore\EventStore;
+use Prooph\EventStore\ActionEventEmitterEventStore;
+use Prooph\EventStore\InMemoryEventStore;
+use Prooph\EventStoreBusBridge\EventPublisher;
+use Prooph\ServiceBus\CommandBus;
+use Prooph\ServiceBus\EventBus;
+use Ramsey\Uuid\Uuid;
 
 require '../vendor/autoload.php';
 
 require 'TodoItem.php';
 
-$adapter = new InMemoryAdapter();
-$eventStore = new EventStore($adapter, new ProophActionEventEmitter());
+$eventStore = new InMemoryEventStore();
+$actionableEventStore = new ActionEventEmitterEventStore($eventStore, new ProophActionEventEmitter());
 
-$repository = new AggregateRepository($eventStore,
+$repository = new AggregateRepository($actionableEventStore,
     AggregateType::fromAggregateRootClass(TodoItem::class),
     new AggregateTranslator(),
     null, //We don't use a snapshot store in the example
@@ -22,23 +29,23 @@ $repository = new AggregateRepository($eventStore,
     true //But we enable the "one-stream-per-aggregate" mode
 );
 
-$commandBus = new \Prooph\ServiceBus\CommandBus();
+$commandBus = new CommandBus();
 
-$eventBus = new \Prooph\ServiceBus\EventBus();
-$eventPublisher = new \Prooph\EventStoreBusBridge\EventPublisher($eventBus);
-$eventPublisher->setUp($eventStore);
+$eventBus = new EventBus();
+$eventPublisher = new EventPublisher($eventBus);
+$eventPublisher->attachToEventStore($actionableEventStore);
 
-$eventRouter = new \Prooph\Annotation\AnnotatedEventRouter(new ItemProjector());
-$eventRouter->attach($eventBus->getActionEventEmitter());
+$eventRouter = new AnnotatedEventRouter(new ItemProjector());
+$eventRouter->attachToMessageBus($eventBus);
 
-$commandTargetResolver = new \Prooph\Annotation\AnnotatedCommandTargetResolver();
+$commandTargetResolver = new AnnotatedCommandTargetResolver();
 
-$commandRouter = new \Prooph\Annotation\AnnotatedCommandHandler(TodoItem::class, $commandTargetResolver, $repository);
-$commandRouter->attach($commandBus->getActionEventEmitter());
+$commandRouter = new AnnotatedCommandHandler(TodoItem::class, $commandTargetResolver, $repository);
+$commandRouter->attachToMessageBus($commandBus);
 
 $eventStore->beginTransaction();
 
-$uuid = \Rhumsaa\Uuid\Uuid::uuid1()->toString();
+$uuid = Uuid::uuid1()->toString();
 
 $commandBus->dispatch(new PostTodo($uuid));
 

@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Prooph\Annotation;
 
 use Prooph\Common\Messaging\Command;
-use Prooph\EventStore\Aggregate\AggregateRepository;
+use Prooph\EventSourcing\Aggregate\AggregateRepository;
 
 class AggregateConstructorCommandHandler
 {
@@ -45,7 +45,7 @@ class AggregateConstructorCommandHandler
     {
         $ref = new \ReflectionClass($this->aggregateName);
         $instance = $ref->newInstanceArgs([$message]);
-        $this->aggregateRepository->addAggregateRoot($instance);
+        $this->aggregateRepository->saveAggregateRoot($instance);
         return $instance;
     }
 }

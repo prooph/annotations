@@ -16,7 +16,7 @@ class MockAggregate extends AnnotatedAggregateRoot
 {
     const AGGREGATE_ID = 'aggregateId';
     
-    protected function aggregateId()
+    protected function aggregateId(): string
     {
         return static::AGGREGATE_ID;
     }

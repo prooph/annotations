@@ -15,11 +15,12 @@ use Prooph\Common\Event\ActionEvent;
 use Prooph\Common\Event\ActionEventEmitter;
 use Prooph\Common\Event\ActionEventListenerAggregate;
 use Prooph\Common\Event\DetachAggregateHandlers;
-use Prooph\EventStore\Aggregate\AggregateRepository;
+use Prooph\EventSourcing\Aggregate\AggregateRepository;
 use Prooph\ServiceBus\MessageBus;
+use Prooph\ServiceBus\Plugin\AbstractPlugin;
 use Prooph\ServiceBus\Plugin\Router\MessageBusRouterPlugin;
 
-class AnnotatedCommandHandler implements MessageBusRouterPlugin, ActionEventListenerAggregate
+class AnnotatedCommandHandler extends AbstractPlugin implements MessageBusRouterPlugin
 {
     use DetachAggregateHandlers;
 
@@ -73,15 +74,17 @@ class AnnotatedCommandHandler implements MessageBusRouterPlugin, ActionEventList
         }
         return $handlers;
     }
-    
+
     /**
-     * @param ActionEventEmitter $dispatcher
-     *
-     * @return void
+     * @param MessageBus $messageBus
      */
-    public function attach(ActionEventEmitter $dispatcher)
+    public function attachToMessageBus(MessageBus $messageBus): void
     {
-        $this->trackHandler($dispatcher->attachListener(MessageBus::EVENT_ROUTE, [$this, "onRouteMessage"]));
+        $this->listenerHandlers[] = $messageBus->attach(
+            MessageBus::EVENT_DISPATCH,
+            [$this, 'onRouteMessage'],
+            MessageBus::PRIORITY_ROUTE
+        );
     }
 
     /**
@@ -90,7 +93,7 @@ class AnnotatedCommandHandler implements MessageBusRouterPlugin, ActionEventList
      * @param ActionEvent $actionEvent
      * @return void
      */
-    public function onRouteMessage(ActionEvent $actionEvent)
+    public function onRouteMessage(ActionEvent $actionEvent): void
     {
         $messageName = (string)$actionEvent->getParam(MessageBus::EVENT_PARAM_MESSAGE_NAME);
 

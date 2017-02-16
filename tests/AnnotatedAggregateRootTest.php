@@ -1,4 +1,13 @@
 <?php
+/**
+ * This file is part of the prooph/annotations package.
+ * (c) 2017 Michiel Rook <mrook@php.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 namespace Prooph\Annotation;
 
@@ -24,11 +33,12 @@ class AnnotatedAggregateRootTest extends TestCase
         $this->expectExceptionMessage(MockAggregate::AGGREGATE_ID);
         
         $aggregate->doSomething(new class extends Command {
-            public function payload()
+            public function payload(): array
             {
+                return [];
             }
 
-            protected function setPayload(array $payload)
+            protected function setPayload(array $payload): void
             {
             }
         });
