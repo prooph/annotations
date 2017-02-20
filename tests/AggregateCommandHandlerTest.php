@@ -17,7 +17,7 @@ class AggregateCommandHandlerTest extends TestCase
 {
     public function testShouldInvokeTargetHandler()
     {
-        $mockHandler = new class {
+        $mockAggregate = new class {
             public function commandHandler(Command $command) {
                 return "commandHandled";
             }

@@ -13,7 +13,7 @@ namespace Prooph\Annotation;
 
 use Prooph\Common\Messaging\Message;
 
-class EventHandlerInvoker
+class AnnotatedHandlerInvoker
 {
     /**
      * @var object
@@ -23,7 +23,7 @@ class EventHandlerInvoker
     /**
      * @var \ReflectionMethod
      */
-    private $target;
+    private $handler;
 
     /**
      * EventHandlerInvoker constructor.
@@ -33,7 +33,7 @@ class EventHandlerInvoker
     public function __construct($delegate, \ReflectionMethod $target)
     {
         $this->delegate = $delegate;
-        $this->target = $target;
+        $this->handler = $target;
     }
 
     /**
@@ -42,7 +42,7 @@ class EventHandlerInvoker
      */
     public function __invoke(Message $event)
     {
-        $this->target->setAccessible(true);
-        return $this->target->invoke($this->delegate, $event);
+        $this->handler->setAccessible(true);
+        return $this->handler->invoke($this->delegate, $event);
     }
 }

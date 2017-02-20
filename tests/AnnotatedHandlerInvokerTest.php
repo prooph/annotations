@@ -12,7 +12,7 @@ namespace Prooph\Annotation;
 use PHPUnit\Framework\TestCase;
 use Prooph\Common\Messaging\Message;
 
-class EventHandlerInvokerTest extends TestCase
+class AnnotatedHandlerInvokerTest extends TestCase
 {
     public function testShouldInvokeTarget()
     {
@@ -23,7 +23,7 @@ class EventHandlerInvokerTest extends TestCase
             }
         };
         
-        $invoker = new EventHandlerInvoker($delegate, new \ReflectionMethod($delegate, 'handle'));
+        $invoker = new AnnotatedHandlerInvoker($delegate, new \ReflectionMethod($delegate, 'handle'));
         static::assertEquals('handler', $invoker($this->getMockBuilder(Message::class)->getMock()));
     }
 }

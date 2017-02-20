@@ -36,7 +36,7 @@ class AnnotatedEventRouterTest extends TestCase
         $event = new DefaultActionEvent('');
         $event->setParam(MessageBus::EVENT_PARAM_MESSAGE_NAME, Message::class);
         $eventRouter->onRouteMessage($event);
-        static::assertInstanceOf(EventHandlerInvoker::class, $event->getParam(EventBus::EVENT_PARAM_EVENT_LISTENERS)[0]);
+        static::assertInstanceOf(AnnotatedHandlerInvoker::class, $event->getParam(EventBus::EVENT_PARAM_EVENT_LISTENERS)[0]);
     }
 
     public function testShouldNotFindHandlerForUnknownEventMessage()

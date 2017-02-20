@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Prooph\Annotation;
 
+use Guzzle\Service\Resource\Model;
 use Prooph\Common\Event\ActionEvent;
 use Prooph\Common\Event\ActionEventEmitter;
 use Prooph\Common\Event\ActionEventListenerAggregate;
@@ -25,7 +26,7 @@ use Prooph\ServiceBus\Plugin\Router\MessageBusRouterPlugin;
 class AnnotatedEventRouter extends AbstractPlugin implements MessageBusRouterPlugin
 {
     /**
-     * @var EventHandlerInspector
+     * @var ModelInspector
      */
     protected $inspector;
 
@@ -36,7 +37,7 @@ class AnnotatedEventRouter extends AbstractPlugin implements MessageBusRouterPlu
      */
     public function __construct($delegate)
     {
-        $this->inspector = new EventHandlerInspector($delegate);
+        $this->inspector = new ModelInspector($delegate);
     }
 
     /**
@@ -53,7 +54,7 @@ class AnnotatedEventRouter extends AbstractPlugin implements MessageBusRouterPlu
             return;
         }
         
-        $invoker = $this->inspector->findMessageInvoker($messageName);
+        $invoker = $this->inspector->getEventHandler($messageName);
         
         if ($invoker === null) {
             return;

@@ -22,9 +22,9 @@ class AggregateCommandHandler
     private $aggregateRepository;
 
     /**
-     * @var string
+     * @var \ReflectionMethod
      */
-    private $target;
+    private $handler;
 
     /**
      * @var CommandTargetResolver
@@ -33,14 +33,14 @@ class AggregateCommandHandler
 
     /**
      * AggregateConstructorCommandHandler constructor.
-     * @param \ReflectionMethod $target
+     * @param \ReflectionMethod $handler
      * @param CommandTargetResolver $commandTargetResolver
      * @param AggregateRepository $aggregateRepository
      */
-    public function __construct(\ReflectionMethod $target, CommandTargetResolver $commandTargetResolver, AggregateRepository $aggregateRepository)
+    public function __construct(\ReflectionMethod $handler, CommandTargetResolver $commandTargetResolver, AggregateRepository $aggregateRepository)
     {
         $this->aggregateRepository = $aggregateRepository;
-        $this->target = $target;
+        $this->handler = $handler;
         $this->commandTargetResolver = $commandTargetResolver;
     }
 
@@ -53,7 +53,7 @@ class AggregateCommandHandler
         $aggregateIdentifier = $this->commandTargetResolver->resolveTarget($message);
         $aggregate = $this->aggregateRepository->getAggregateRoot($aggregateIdentifier);
         
-        $this->target->setAccessible(true);
-        return $this->target->invoke($aggregate, $message);
+        $this->handler->setAccessible(true);
+        return $this->handler->invoke($aggregate->getAggregate(), $message);
     }
 }

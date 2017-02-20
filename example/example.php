@@ -3,9 +3,8 @@
 use Prooph\Annotation\AnnotatedCommandHandler;
 use Prooph\Annotation\AnnotatedCommandTargetResolver;
 use Prooph\Annotation\AnnotatedEventRouter;
+use Prooph\Annotation\EventSourcingRepository;
 use Prooph\Common\Event\ProophActionEventEmitter;
-use Prooph\EventSourcing\Aggregate\AggregateRepository;
-use Prooph\EventSourcing\Aggregate\AggregateType;
 use Prooph\EventSourcing\EventStoreIntegration\AggregateTranslator;
 use Prooph\EventStore\ActionEventEmitterEventStore;
 use Prooph\EventStore\InMemoryEventStore;
@@ -21,9 +20,8 @@ require 'TodoItem.php';
 $eventStore = new InMemoryEventStore();
 $actionableEventStore = new ActionEventEmitterEventStore($eventStore, new ProophActionEventEmitter());
 
-$repository = new AggregateRepository($actionableEventStore,
-    AggregateType::fromAggregateRootClass(TodoItem::class),
-    new AggregateTranslator(),
+$repository = new EventSourcingRepository($actionableEventStore,
+    TodoItem::class,
     null, //We don't use a snapshot store in the example
     null, //Also a custom stream name is not required
     true //But we enable the "one-stream-per-aggregate" mode
@@ -42,7 +40,6 @@ $commandTargetResolver = new AnnotatedCommandTargetResolver();
 
 $commandRouter = new AnnotatedCommandHandler(TodoItem::class, $commandTargetResolver, $repository);
 $commandRouter->attachToMessageBus($commandBus);
-
 $eventStore->beginTransaction();
 
 $uuid = Uuid::uuid1()->toString();
