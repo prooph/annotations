@@ -5,7 +5,6 @@ use Prooph\Annotation\AnnotatedCommandTargetResolver;
 use Prooph\Annotation\AnnotatedEventRouter;
 use Prooph\Annotation\EventSourcingRepository;
 use Prooph\Common\Event\ProophActionEventEmitter;
-use Prooph\EventSourcing\EventStoreIntegration\AggregateTranslator;
 use Prooph\EventStore\ActionEventEmitterEventStore;
 use Prooph\EventStore\InMemoryEventStore;
 use Prooph\EventStoreBusBridge\EventPublisher;

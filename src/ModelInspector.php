@@ -11,9 +11,6 @@ declare(strict_types=1);
 
 namespace Prooph\Annotation;
 
-use Prooph\Common\Messaging\Command;
-use Prooph\EventSourcing\AggregateChanged;
-
 class ModelInspector
 {
     /**

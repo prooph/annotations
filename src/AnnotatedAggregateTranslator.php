@@ -1,4 +1,13 @@
 <?php
+/**
+ * This file is part of the prooph/annotations package.
+ * (c) 2017 Michiel Rook <mrook@php.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 namespace Prooph\Annotation;
 
@@ -6,7 +15,6 @@ use Iterator;
 use Prooph\Common\Messaging\Message;
 use Prooph\EventSourcing\Aggregate\AggregateTranslator as EventStoreAggregateTranslator;
 use Prooph\EventSourcing\Aggregate\AggregateType;
-use Prooph\EventSourcing\Aggregate\Exception\RuntimeException;
 
 class AnnotatedAggregateTranslator implements EventStoreAggregateTranslator
 {

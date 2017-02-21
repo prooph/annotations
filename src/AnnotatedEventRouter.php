@@ -11,11 +11,7 @@ declare(strict_types=1);
 
 namespace Prooph\Annotation;
 
-use Guzzle\Service\Resource\Model;
 use Prooph\Common\Event\ActionEvent;
-use Prooph\Common\Event\ActionEventEmitter;
-use Prooph\Common\Event\ActionEventListenerAggregate;
-use Prooph\Common\Event\DetachAggregateHandlers;
 use Prooph\ServiceBus\EventBus;
 use Prooph\ServiceBus\Exception\InvalidArgumentException;
 use Prooph\ServiceBus\Exception\RuntimeException;

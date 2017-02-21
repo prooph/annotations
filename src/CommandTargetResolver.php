@@ -7,6 +7,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Prooph\Annotation;
 
 use Prooph\Common\Messaging\Command;
@@ -17,5 +19,5 @@ interface CommandTargetResolver
      * @param Command $command
      * @return string
      */
-    public function resolveTarget(Command $command);
+    public function resolveTarget(Command $command): string;
 }

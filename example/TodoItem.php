@@ -2,7 +2,6 @@
 
 use Prooph\Annotation\AggregateIdentifier;
 use Prooph\Annotation\AggregateLifecycle;
-use Prooph\Annotation\AnnotatedAggregateRoot;
 use Prooph\Common\Messaging\Command;
 use Prooph\Common\Messaging\Message;
 use Prooph\EventSourcing\AggregateChanged;

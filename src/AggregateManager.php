@@ -35,8 +35,9 @@ class AggregateManager
     /**
      * @param callable $factoryMethod
      * @return AnnotatedAggregate
+     * @throws \RuntimeException
      */
-    public static function newInstance(callable $factoryMethod)
+    public static function newInstance(callable $factoryMethod): AnnotatedAggregate
     {
         $wrapper = new AnnotatedAggregate();
         static::$lastCreatedAggregate = $wrapper;
