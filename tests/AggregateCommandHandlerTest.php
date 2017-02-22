@@ -17,13 +17,19 @@ class AggregateCommandHandlerTest extends TestCase
 {
     public function testShouldInvokeTargetHandler()
     {
-        $mockAggregate = new class {
+        $mockAggregate = new AnnotatedAggregate();
+        $mockAggregate->registerAggregate(new class {
+            /**
+             * @Prooph\Annotation\AggregateIdentifier
+             */
+            private $aggregateId;
+            
             public function commandHandler(Command $command) {
                 return "commandHandled";
             }
-        };
+        });
         
-        $rm = new \ReflectionMethod(get_class($mockHandler), 'commandHandler');
+        $rm = new \ReflectionMethod(get_class($mockAggregate->getAggregate()), 'commandHandler');
         
         $commandTargetResolver = $this->getMockBuilder(CommandTargetResolver::class)
             ->getMock();
@@ -36,7 +42,7 @@ class AggregateCommandHandlerTest extends TestCase
             ->getMock();
         $aggregateRepository->expects(static::once())
             ->method('getAggregateRoot')
-            ->willReturn($mockHandler);
+            ->willReturn($mockAggregate);
 
         $handler = new AggregateCommandHandler($rm, $commandTargetResolver, $aggregateRepository);
         
