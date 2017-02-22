@@ -38,16 +38,17 @@ class AnnotationUtils
      */
     public static function getInstance(): self
     {
-        AnnotationRegistry::registerLoader(function($name) {
+        AnnotationRegistry::registerLoader(function ($name) {
             if (strpos($name, 'Prooph\\Annotation') === 0) {
                 return true;
             }
+
             return false;
         });
 
         // @TODO use caching
         $reader = new IndexedReader(new AnnotationReader());
-        
+
         return new self($reader);
     }
 
@@ -58,7 +59,7 @@ class AnnotationUtils
      */
     public static function getAnnotatedMethods($className, $annotation): array
     {
-        return array_map(function($methodWithAnnotation) {
+        return array_map(function ($methodWithAnnotation) {
             return $methodWithAnnotation[0];
         }, self::getAnnotatedMethodsWithAttributes($className, $annotation));
     }
@@ -98,7 +99,7 @@ class AnnotationUtils
                 $properties[] = $property;
             }
         }
-        
+
         return $properties;
     }
 }

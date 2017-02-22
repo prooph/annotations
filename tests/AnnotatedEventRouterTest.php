@@ -7,10 +7,11 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Prooph\Annotation;
 
 use PHPUnit\Framework\TestCase;
-use Prooph\Common\Event\ActionEventEmitter;
 use Prooph\Common\Event\DefaultActionEvent;
 use Prooph\Common\Event\ListenerHandler;
 use Prooph\Common\Messaging\Message;
@@ -21,7 +22,7 @@ class AnnotatedEventRouterTest extends TestCase
 {
     public function testShouldFindHandlerForEventMessage()
     {
-        $projector = new class {
+        $projector = new class() {
             /**
              * @Prooph\Annotation\EventHandler
              * @param Message $message
@@ -30,9 +31,9 @@ class AnnotatedEventRouterTest extends TestCase
             {
             }
         };
-        
+
         $eventRouter = new AnnotatedEventRouter($projector);
-        
+
         $event = new DefaultActionEvent('');
         $event->setParam(MessageBus::EVENT_PARAM_MESSAGE_NAME, Message::class);
         $eventRouter->onRouteMessage($event);

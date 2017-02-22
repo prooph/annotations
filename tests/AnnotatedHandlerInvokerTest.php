@@ -7,6 +7,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Prooph\Annotation;
 
 use PHPUnit\Framework\TestCase;
@@ -16,13 +18,13 @@ class AnnotatedHandlerInvokerTest extends TestCase
 {
     public function testShouldInvokeTarget()
     {
-        $delegate = new class {
+        $delegate = new class() {
             public function handle(Message $message)
             {
                 return 'handler';
             }
         };
-        
+
         $invoker = new AnnotatedHandlerInvoker($delegate, new \ReflectionMethod($delegate, 'handle'));
         static::assertEquals('handler', $invoker($this->getMockBuilder(Message::class)->getMock()));
     }

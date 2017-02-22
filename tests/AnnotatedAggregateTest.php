@@ -22,43 +22,48 @@ class AnnotatedAggregateTest extends TestCase
     {
         AggregateManager::reset();
     }
-    
+
     public function testShouldReplayEvents()
     {
         $wrapper = new AnnotatedAggregate();
-        
+
         $wrapper->replay(new \ArrayIterator([AggregateChanged::occur('aggregateId')->withVersion(5)]));
-        
+
         static::assertEquals(5, $wrapper->getVersion());
     }
-    
+
     public function testShouldNotRetrieveAggregateIdWhenAnnotationMissing()
     {
         $wrapper = new AnnotatedAggregate();
-        $wrapper->registerAggregate(new class {});
-        
+        $wrapper->registerAggregate(new class() {
+        });
+
         static::expectException(\RuntimeException::class);
         static::expectExceptionMessageRegExp('/^Missing AggregateIdentifier annotation.*/');
 
         $wrapper->getAggregateId();
     }
-    
+
     public function testShouldReturnAggregateType()
     {
         $command = $this->getMockBuilder(Command::class)->getMock();
 
-        $wrapper = AggregateManager::newInstance(function() use ($command) { return new MockAggregate($command); });
+        $wrapper = AggregateManager::newInstance(function () use ($command) {
+            return new MockAggregate($command);
+        });
 
         $aggregateType = $wrapper->aggregateType();
-        
+
         static::assertInstanceOf(AggregateType::class, $aggregateType);
     }
-    
+
     public function testShouldRegisterAggregate()
     {
         $command = $this->getMockBuilder(Command::class)->getMock();
 
-        $wrapper = AggregateManager::newInstance(function() use ($command) { return new MockAggregate($command); });
+        $wrapper = AggregateManager::newInstance(function () use ($command) {
+            return new MockAggregate($command);
+        });
 
         static::assertEquals(MockAggregate::AGGREGATE_ID, $wrapper->getAggregateId());
     }
@@ -67,19 +72,23 @@ class AnnotatedAggregateTest extends TestCase
     {
         $command = $this->getMockBuilder(Command::class)->getMock();
 
-        $wrapper = AggregateManager::newInstance(function() use ($command) { return new MockAggregate($command); });
-        
+        $wrapper = AggregateManager::newInstance(function () use ($command) {
+            return new MockAggregate($command);
+        });
+
         $wrapper->getAggregate()->doSomething($command);
     }
-    
+
     public function testShouldRecordEvent()
     {
         $command = $this->getMockBuilder(Command::class)->getMock();
-        
-        $wrapper = AggregateManager::newInstance(function() use ($command) { return new MockAggregate($command); });
-        
+
+        $wrapper = AggregateManager::newInstance(function () use ($command) {
+            return new MockAggregate($command);
+        });
+
         $wrapper->getAggregate()->doSomething($command);
-        
+
         static::assertNotEmpty($wrapper->popRecordedEvents());
     }
 }

@@ -7,6 +7,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Prooph\Annotation;
 
 use PHPUnit\Framework\TestCase;
@@ -18,19 +20,20 @@ class AggregateCommandHandlerTest extends TestCase
     public function testShouldInvokeTargetHandler()
     {
         $mockAggregate = new AnnotatedAggregate();
-        $mockAggregate->registerAggregate(new class {
+        $mockAggregate->registerAggregate(new class() {
             /**
              * @Prooph\Annotation\AggregateIdentifier
              */
             private $aggregateId;
-            
-            public function commandHandler(Command $command) {
-                return "commandHandled";
+
+            public function commandHandler(Command $command)
+            {
+                return 'commandHandled';
             }
         });
-        
+
         $rm = new \ReflectionMethod(get_class($mockAggregate->getAggregate()), 'commandHandler');
-        
+
         $commandTargetResolver = $this->getMockBuilder(CommandTargetResolver::class)
             ->getMock();
         $commandTargetResolver->expects(static::once())
@@ -45,7 +48,7 @@ class AggregateCommandHandlerTest extends TestCase
             ->willReturn($mockAggregate);
 
         $handler = new AggregateCommandHandler($rm, $commandTargetResolver, $aggregateRepository);
-        
+
         $result = $handler($this->getMockBuilder(Command::class)->getMock());
         static::assertEquals('commandHandled', $result);
     }

@@ -7,6 +7,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Prooph\Annotation;
 
 use Prooph\Common\Messaging\Command;
@@ -21,7 +23,7 @@ class MockAggregate
      * @AggregateIdentifier
      */
     private $aggregateId = self::AGGREGATE_ID;
-    
+
     /**
      * @CommandHandler(commandName="SomeOtherCommand")
      */
@@ -44,7 +46,7 @@ class MockAggregate
      */
     public function onSomething(AggregateChanged $event)
     {
-//        throw new \RuntimeException($event->aggregateId());
+        //        throw new \RuntimeException($event->aggregateId());
     }
 
     /**

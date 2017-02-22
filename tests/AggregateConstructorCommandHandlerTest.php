@@ -7,6 +7,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Prooph\Annotation;
 
 use PHPUnit\Framework\TestCase;
@@ -24,7 +26,7 @@ class AggregateConstructorCommandHandlerTest extends TestCase
 
         $rc = new \ReflectionClass(MockAggregate::class);
         $handler = new AggregateConstructorCommandHandler($rc->getConstructor(), $aggregateRepository);
-        
+
         $result = $handler($this->getMockBuilder(Command::class)->getMock());
         static::assertInstanceOf(AnnotatedAggregate::class, $result);
         static::assertInstanceOf(MockAggregate::class, $result->getAggregate());

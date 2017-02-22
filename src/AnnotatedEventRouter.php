@@ -44,14 +44,14 @@ class AnnotatedEventRouter extends AbstractPlugin implements MessageBusRouterPlu
      */
     public function onRouteMessage(ActionEvent $actionEvent): void
     {
-        $messageName = (string)$actionEvent->getParam(MessageBus::EVENT_PARAM_MESSAGE_NAME);
+        $messageName = (string) $actionEvent->getParam(MessageBus::EVENT_PARAM_MESSAGE_NAME);
 
         if (empty($messageName)) {
             return;
         }
-        
+
         $invoker = $this->inspector->getEventHandler($messageName);
-        
+
         if ($invoker === null) {
             return;
         }

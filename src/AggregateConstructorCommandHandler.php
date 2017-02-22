@@ -42,10 +42,11 @@ class AggregateConstructorCommandHandler
      */
     public function __invoke(Command $message)
     {
-        $instance = AggregateManager::newInstance(function() use ($message) {
+        $instance = AggregateManager::newInstance(function () use ($message) {
             return $this->method->getDeclaringClass()->newInstance($message);
         });
         $this->aggregateRepository->saveAggregateRoot($instance);
+
         return $instance;
     }
 }

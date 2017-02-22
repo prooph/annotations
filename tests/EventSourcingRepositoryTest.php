@@ -23,7 +23,7 @@ class EventSourcingRepositoryTest extends TestCase
         $eventStore = $this->getMockBuilder(EventStore::class)->getMock();
         $eventStore->expects(static::once())
             ->method('create');
-        
+
         $aggregate = $this->getMockBuilder(AnnotatedAggregate::class)->getMock();
         $aggregate->expects(static::once())
             ->method('aggregateType')

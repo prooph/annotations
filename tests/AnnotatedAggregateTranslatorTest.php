@@ -32,7 +32,7 @@ class AnnotatedAggregateTranslatorTest extends TestCase
         $mockAggregate->expects(static::once())
             ->method('getVersion')
             ->willReturn(101);
-        
+
         static::assertEquals(101, $this->translator->extractAggregateVersion($mockAggregate));
     }
 
@@ -42,7 +42,7 @@ class AnnotatedAggregateTranslatorTest extends TestCase
         $mockAggregate->expects(static::once())
             ->method('getAggregateId')
             ->willReturn('aggregateId');
-        
+
         static::assertEquals('aggregateId', $this->translator->extractAggregateId($mockAggregate));
     }
 
@@ -66,7 +66,7 @@ class AnnotatedAggregateTranslatorTest extends TestCase
     public function testShoulReplayStreamEvents()
     {
         $eventsIterator = new \ArrayIterator();
-        
+
         $mockAggregate = $this->getMockBuilder(AnnotatedAggregate::class)->getMock();
         $mockAggregate->expects(static::once())
             ->method('replay')

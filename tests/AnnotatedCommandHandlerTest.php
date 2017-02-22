@@ -7,6 +7,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Prooph\Annotation;
 
 use PHPUnit\Framework\TestCase;
@@ -59,15 +61,15 @@ class AnnotatedCommandHandlerTest extends TestCase
         $this->handler->onRouteMessage($event);
         static::assertEmpty($event->getParam(MessageBus::EVENT_PARAM_MESSAGE_HANDLER));
     }
-    
+
     public function testShouldAttachToEmitter()
     {
         $emitter = $this->getMockBuilder(MessageBus::class)->getMock();
-        
+
         $emitter->expects(static::once())
             ->method('attach')
             ->willReturn($this->getMockBuilder(ListenerHandler::class)->getMock());
-        
+
         $this->handler->attachToMessageBus($emitter);
     }
 }

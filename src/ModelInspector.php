@@ -50,7 +50,7 @@ class ModelInspector
             } else {
                 $eventName = (string) $method->getParameters()[0]->getType();
             }
-            $this->eventHandlers[$eventName] = new AnnotatedHandlerInvoker($delegate, $method);;
+            $this->eventHandlers[$eventName] = new AnnotatedHandlerInvoker($delegate, $method);
         }
     }
 
@@ -60,10 +60,10 @@ class ModelInspector
      */
     public function getCommandHandler(string $commandName): ?AnnotatedHandlerInvoker
     {
-        if (!isset($this->commandHandlers[$commandName])) {
+        if (! isset($this->commandHandlers[$commandName])) {
             return null;
         }
-        
+
         return $this->commandHandlers[$commandName];
     }
 
@@ -73,10 +73,10 @@ class ModelInspector
      */
     public function getEventHandler(string $eventName): ?AnnotatedHandlerInvoker
     {
-        if (!isset($this->eventHandlers[$eventName])) {
+        if (! isset($this->eventHandlers[$eventName])) {
             return null;
         }
-        
+
         return $this->eventHandlers[$eventName];
     }
 }

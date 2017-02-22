@@ -34,6 +34,7 @@ class AnnotatedCommandTargetResolver implements CommandTargetResolver
         if (count($properties) > 0) {
             $property = $properties[0];
             $property->setAccessible(true);
+
             return $property->getValue($command);
         }
 

@@ -52,8 +52,9 @@ class AggregateCommandHandler
     {
         $aggregateIdentifier = $this->commandTargetResolver->resolveTarget($message);
         $aggregate = $this->aggregateRepository->getAggregateRoot($aggregateIdentifier);
-        
+
         $this->handler->setAccessible(true);
+
         return $this->handler->invoke($aggregate->getAggregate(), $message);
     }
 }

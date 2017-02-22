@@ -45,7 +45,7 @@ class AnnotatedAggregate extends AggregateLifecycle implements AggregateTypeProv
      * @var AggregateChanged[]
      */
     protected $delayedEvents = [];
-    
+
     /**
      * @param object $aggregate
      */
@@ -53,12 +53,12 @@ class AnnotatedAggregate extends AggregateLifecycle implements AggregateTypeProv
     {
         $this->inspector = new ModelInspector($aggregate);
         $this->aggregate = $aggregate;
-        
-        if (!empty($this->delayedEvents)) {
+
+        if (! empty($this->delayedEvents)) {
             foreach ($this->delayedEvents as $event) {
                 $this->apply($event);
             }
-            
+
             $this->delayedEvents = [];
         }
     }
@@ -86,20 +86,21 @@ class AnnotatedAggregate extends AggregateLifecycle implements AggregateTypeProv
     {
         return $this->version;
     }
-    
+
     /**
      * @return string representation of the unique identifier of the aggregate root
      */
     public function getAggregateId()
     {
         $properties = AnnotationUtils::getAnnotatedProperties(get_class($this->aggregate), AggregateIdentifier::class);
-        
+
         if (empty($properties)) {
             throw new \RuntimeException(sprintf('Missing AggregateIdentifier annotation on aggregate root %s', get_class($this->aggregate)));
         }
-        
+
         $property = reset($properties);
         $property->setAccessible(true);
+
         return $property->getValue($this->aggregate);
     }
 
@@ -157,5 +158,4 @@ class AnnotatedAggregate extends AggregateLifecycle implements AggregateTypeProv
     {
         return $this->aggregate;
     }
-
 }

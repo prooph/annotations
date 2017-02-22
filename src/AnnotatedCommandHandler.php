@@ -63,13 +63,14 @@ class AnnotatedCommandHandler extends AbstractPlugin implements MessageBusRouter
             } else {
                 $commandName = (string) $method->getParameters()[0]->getType();
             }
-            
+
             if ($method->isConstructor()) {
                 $handlers[$commandName] = new AggregateConstructorCommandHandler($method, $this->aggregateRepository);
             } else {
                 $handlers[$commandName] = new AggregateCommandHandler($method, $this->commandTargetResolver, $this->aggregateRepository);
             }
         }
+
         return $handlers;
     }
 
@@ -93,16 +94,16 @@ class AnnotatedCommandHandler extends AbstractPlugin implements MessageBusRouter
      */
     public function onRouteMessage(ActionEvent $actionEvent): void
     {
-        $messageName = (string)$actionEvent->getParam(MessageBus::EVENT_PARAM_MESSAGE_NAME);
+        $messageName = (string) $actionEvent->getParam(MessageBus::EVENT_PARAM_MESSAGE_NAME);
 
         if (empty($messageName)) {
             return;
         }
 
-        if (!isset($this->handlers[$messageName])) {
+        if (! isset($this->handlers[$messageName])) {
             return;
         }
-        
+
         $handler = $this->handlers[$messageName];
 
         $actionEvent->setParam(MessageBus::EVENT_PARAM_MESSAGE_HANDLER, $handler);

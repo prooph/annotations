@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 use Prooph\Annotation\AnnotatedCommandHandler;
 use Prooph\Annotation\AnnotatedCommandTargetResolver;
 use Prooph\Annotation\AnnotatedEventRouter;

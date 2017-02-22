@@ -43,6 +43,7 @@ class AnnotatedHandlerInvoker
     public function __invoke(Message $event)
     {
         $this->handler->setAccessible(true);
+
         return $this->handler->invoke($this->delegate, $event);
     }
 }

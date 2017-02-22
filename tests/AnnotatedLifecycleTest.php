@@ -20,11 +20,11 @@ class AnnotatedLifecycleTest extends TestCase
     {
         AggregateManager::reset();
     }
-    
+
     public function testShouldNotRecordEventForUnknownAggregate()
     {
         static::expectException(\RuntimeException::class);
-        
+
         AggregateLifecycle::recordThat(AggregateChanged::occur('aggregateId'));
     }
 }

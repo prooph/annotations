@@ -21,7 +21,7 @@ abstract class AggregateLifecycle
     public static function recordThat(AggregateChanged $e)
     {
         $instance = AggregateManager::getInstance($e->aggregateId());
-        
+
         if ($instance === null) {
             throw new \RuntimeException(sprintf('Did not find an aggregate root for id %s', $e->aggregateId()));
         }
@@ -33,5 +33,5 @@ abstract class AggregateLifecycle
      * @param AggregateChanged $e
      * @return mixed
      */
-    protected abstract function doRecordThat(AggregateChanged $e);
+    abstract protected function doRecordThat(AggregateChanged $e);
 }

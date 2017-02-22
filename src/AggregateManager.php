@@ -41,9 +41,9 @@ class AggregateManager
     {
         $wrapper = new AnnotatedAggregate();
         static::$lastCreatedAggregate = $wrapper;
-        
+
         $wrapper->registerAggregate($factoryMethod());
-        
+
         $aggregateId = $wrapper->getAggregateId();
 
         if (isset(static::$managedAggregates[$aggregateId])) {
@@ -64,7 +64,7 @@ class AggregateManager
         if (isset(static::$managedAggregates[$aggregateId])) {
             return static::$managedAggregates[$aggregateId];
         }
-        
+
         return static::$lastCreatedAggregate;
     }
 }

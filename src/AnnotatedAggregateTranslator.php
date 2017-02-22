@@ -18,7 +18,6 @@ use Prooph\EventSourcing\Aggregate\AggregateType;
 
 class AnnotatedAggregateTranslator implements EventStoreAggregateTranslator
 {
-
     /**
      * @param object $eventSourcedAggregateRoot
      * @return int
@@ -47,6 +46,7 @@ class AnnotatedAggregateTranslator implements EventStoreAggregateTranslator
         $aggregate = $rc->newInstanceWithoutConstructor();
         $wrapper->registerAggregate($aggregate);
         $wrapper->replay($historyEvents);
+
         return $wrapper;
     }
 

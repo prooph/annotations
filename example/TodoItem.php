@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
 use Prooph\Annotation\AggregateIdentifier;
 use Prooph\Annotation\AggregateLifecycle;
+use Prooph\Annotation\CommandHandler;
+use Prooph\Annotation\EventHandler;
+use Prooph\Annotation\TargetAggregateIdentifier;
 use Prooph\Common\Messaging\Command;
 use Prooph\Common\Messaging\Message;
 use Prooph\EventSourcing\AggregateChanged;
-use Prooph\Annotation\EventHandler;
-use Prooph\Annotation\CommandHandler;
-use Prooph\Annotation\TargetAggregateIdentifier;
 
 class PostTodo extends Command
 {
@@ -190,7 +191,7 @@ class TodoItem
     public function onTodoPosted(TodoPosted $event)
     {
         $this->itemId = $event->getItemId();
-        echo "Posted: " . $event->getItemId() . "\n";
+        echo 'Posted: ' . $event->getItemId() . "\n";
     }
 
     /**
@@ -199,7 +200,7 @@ class TodoItem
      */
     public function onTodoUpdated(TodoUpdated $event)
     {
-        echo "Updated: " . $event->getItemId() . "\n";
+        echo 'Updated: ' . $event->getItemId() . "\n";
     }
 }
 
@@ -211,6 +212,6 @@ class ItemProjector
      */
     public function onTodoPosted(TodoPosted $event)
     {
-        echo "Projecting " . $event->getItemId() . "\n";
+        echo 'Projecting ' . $event->getItemId() . "\n";
     }
 }
