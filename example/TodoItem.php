@@ -1,6 +1,7 @@
 <?php
 
-use Prooph\Annotation\AnnotatedAggregateRoot;
+use Prooph\Annotation\AggregateIdentifier;
+use Prooph\Annotation\AggregateLifecycle;
 use Prooph\Common\Messaging\Command;
 use Prooph\Common\Messaging\Message;
 use Prooph\EventSourcing\AggregateChanged;
@@ -155,8 +156,12 @@ class TodoUpdated extends AggregateChanged
     }
 }
 
-class TodoItem extends AnnotatedAggregateRoot
+class TodoItem
 {
+    /**
+     * @AggregateIdentifier
+     * @var string
+     */
     private $itemId;
 
     /**
@@ -166,7 +171,7 @@ class TodoItem extends AnnotatedAggregateRoot
      */
     public function __construct(PostTodo $command)
     {
-        $this->recordThat(new TodoPosted($command->getItemId()));
+        AggregateLifecycle::recordThat(new TodoPosted($command->getItemId()));
     }
 
     /**
@@ -175,15 +180,7 @@ class TodoItem extends AnnotatedAggregateRoot
      */
     public function updateTodo(UpdateTodo $command)
     {
-        $this->recordThat(new TodoUpdated($command->getItemId()));
-    }
-
-    /**
-     * @return string representation of the unique identifier of the aggregate root
-     */
-    protected function aggregateId(): string
-    {
-        return $this->itemId;
+        AggregateLifecycle::recordThat(new TodoUpdated($command->getItemId()));
     }
 
     /**

@@ -11,13 +11,12 @@ declare(strict_types=1);
 
 namespace Prooph\Annotation;
 
-use Prooph\Common\Messaging\Command;
+use Doctrine\Common\Annotations\Annotation\Target;
 
-interface CommandTargetResolver
+/**
+ * @Annotation
+ * @Target({"METHOD", "PROPERTY"})
+ */
+class AggregateIdentifier
 {
-    /**
-     * @param Command $command
-     * @return string
-     */
-    public function resolveTarget(Command $command): string;
 }

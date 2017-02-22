@@ -11,28 +11,22 @@ namespace Prooph\Annotation;
 
 use PHPUnit\Framework\TestCase;
 use Prooph\Common\Messaging\Command;
-use Prooph\EventSourcing\Aggregate\AggregateRepository;
 
 class AggregateConstructorCommandHandlerTest extends TestCase
 {
     public function testShouldInvokeTargetHandler()
     {
-        $aggregateRepository = $this->getMockBuilder(AggregateRepository::class)
+        $aggregateRepository = $this->getMockBuilder(EventSourcingRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
         $aggregateRepository->expects(static::once())
             ->method('saveAggregateRoot');
 
-        $handler = new AggregateConstructorCommandHandler(MockHandler::class, $aggregateRepository);
+        $rc = new \ReflectionClass(MockAggregate::class);
+        $handler = new AggregateConstructorCommandHandler($rc->getConstructor(), $aggregateRepository);
         
         $result = $handler($this->getMockBuilder(Command::class)->getMock());
-        static::assertInstanceOf(MockHandler::class, $result);
-    }
-}
-
-class MockHandler
-{
-    public function __construct(Command $command)
-    {
+        static::assertInstanceOf(AnnotatedAggregate::class, $result);
+        static::assertInstanceOf(MockAggregate::class, $result->getAggregate());
     }
 }

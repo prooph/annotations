@@ -13,7 +13,6 @@ use PHPUnit\Framework\TestCase;
 use Prooph\Common\Event\DefaultActionEvent;
 use Prooph\Common\Event\ListenerHandler;
 use Prooph\Common\Messaging\Command;
-use Prooph\EventSourcing\Aggregate\AggregateRepository;
 use Prooph\ServiceBus\MessageBus;
 
 class AnnotatedCommandHandlerTest extends TestCase
@@ -28,7 +27,7 @@ class AnnotatedCommandHandlerTest extends TestCase
         $commandTargetResolver = $this->getMockBuilder(CommandTargetResolver::class)
             ->getMock();
 
-        $aggregateRepository = $this->getMockBuilder(AggregateRepository::class)
+        $aggregateRepository = $this->getMockBuilder(EventSourcingRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 

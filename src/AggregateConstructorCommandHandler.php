@@ -17,24 +17,23 @@ use Prooph\EventSourcing\Aggregate\AggregateRepository;
 class AggregateConstructorCommandHandler
 {
     /**
-     * @var AggregateRepository
+     * @var EventSourcingRepository
      */
     private $aggregateRepository;
 
     /**
-     * @var string
+     * @var \ReflectionMethod
      */
-    private $aggregateName;
+    private $method;
 
     /**
      * AggregateConstructorCommandHandler constructor.
-     * @param string $aggregateName
      * @param AggregateRepository $aggregateRepository
      */
-    public function __construct(string $aggregateName, AggregateRepository $aggregateRepository)
+    public function __construct(\ReflectionMethod $method, EventSourcingRepository $aggregateRepository)
     {
         $this->aggregateRepository = $aggregateRepository;
-        $this->aggregateName = $aggregateName;
+        $this->method = $method;
     }
 
     /**
@@ -43,8 +42,9 @@ class AggregateConstructorCommandHandler
      */
     public function __invoke(Command $message)
     {
-        $ref = new \ReflectionClass($this->aggregateName);
-        $instance = $ref->newInstanceArgs([$message]);
+        $instance = AggregateManager::newInstance(function() use ($message) {
+            return $this->method->getDeclaringClass()->newInstance($message);
+        });
         $this->aggregateRepository->saveAggregateRoot($instance);
         return $instance;
     }

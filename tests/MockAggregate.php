@@ -12,20 +12,22 @@ namespace Prooph\Annotation;
 use Prooph\Common\Messaging\Command;
 use Prooph\EventSourcing\AggregateChanged;
 
-class MockAggregate extends AnnotatedAggregateRoot
+class MockAggregate
 {
     const AGGREGATE_ID = 'aggregateId';
-    
-    protected function aggregateId(): string
-    {
-        return static::AGGREGATE_ID;
-    }
+
+    /**
+     * @var string
+     * @AggregateIdentifier
+     */
+    private $aggregateId = self::AGGREGATE_ID;
     
     /**
      * @CommandHandler(commandName="SomeOtherCommand")
      */
     public function __construct(Command $command)
     {
+        AggregateLifecycle::recordThat(AggregateChanged::occur($this->aggregateId, []));
     }
 
     /**
@@ -33,7 +35,7 @@ class MockAggregate extends AnnotatedAggregateRoot
      */
     public function doSomething(Command $command)
     {
-        $this->recordThat(AggregateChanged::occur($this->aggregateId(), []));
+        AggregateLifecycle::recordThat(AggregateChanged::occur($this->aggregateId, []));
     }
 
     /**
@@ -42,7 +44,7 @@ class MockAggregate extends AnnotatedAggregateRoot
      */
     public function onSomething(AggregateChanged $event)
     {
-        throw new \RuntimeException($event->aggregateId());
+//        throw new \RuntimeException($event->aggregateId());
     }
 
     /**
@@ -50,6 +52,6 @@ class MockAggregate extends AnnotatedAggregateRoot
      */
     public function doSomethingElse(AggregateChanged $event)
     {
-        $this->recordThat($event);
+        AggregateLifecycle::recordThat($event);
     }
 }

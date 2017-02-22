@@ -12,10 +12,7 @@ declare(strict_types=1);
 namespace Prooph\Annotation;
 
 use Prooph\Common\Event\ActionEvent;
-use Prooph\Common\Event\ActionEventEmitter;
-use Prooph\Common\Event\ActionEventListenerAggregate;
 use Prooph\Common\Event\DetachAggregateHandlers;
-use Prooph\EventSourcing\Aggregate\AggregateRepository;
 use Prooph\ServiceBus\MessageBus;
 use Prooph\ServiceBus\Plugin\AbstractPlugin;
 use Prooph\ServiceBus\Plugin\Router\MessageBusRouterPlugin;
@@ -30,9 +27,10 @@ class AnnotatedCommandHandler extends AbstractPlugin implements MessageBusRouter
     protected $handlers;
 
     /**
-     * @var AggregateRepository
+     * @var EventSourcingRepository
      */
     private $aggregateRepository;
+
     /**
      * @var CommandTargetResolver
      */
@@ -42,9 +40,9 @@ class AnnotatedCommandHandler extends AbstractPlugin implements MessageBusRouter
      * AnnotatedCommandHandler constructor.
      * @param string $aggregateName
      * @param CommandTargetResolver $commandTargetResolver
-     * @param AggregateRepository $aggregateRepository
+     * @param EventSourcingRepository $aggregateRepository
      */
-    public function __construct(string $aggregateName, CommandTargetResolver $commandTargetResolver, AggregateRepository $aggregateRepository)
+    public function __construct(string $aggregateName, CommandTargetResolver $commandTargetResolver, EventSourcingRepository $aggregateRepository)
     {
         $this->aggregateRepository = $aggregateRepository;
         $this->commandTargetResolver = $commandTargetResolver;
@@ -67,7 +65,7 @@ class AnnotatedCommandHandler extends AbstractPlugin implements MessageBusRouter
             }
             
             if ($method->isConstructor()) {
-                $handlers[$commandName] = new AggregateConstructorCommandHandler($aggregateName, $this->aggregateRepository);
+                $handlers[$commandName] = new AggregateConstructorCommandHandler($method, $this->aggregateRepository);
             } else {
                 $handlers[$commandName] = new AggregateCommandHandler($method, $this->commandTargetResolver, $this->aggregateRepository);
             }
