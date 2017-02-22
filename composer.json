@@ -31,8 +31,7 @@
         "prooph/common": "^4.0",
         "prooph/event-sourcing": "5.0.x-dev",
         "prooph/event-store": "7.0.x-dev",
-        "prooph/service-bus": "6.0.x-dev",
-        "ramsey/uuid": "^3.0"
+        "prooph/service-bus": "^6.0"
     },
     "require-dev": {
         "malukenho/docheader": "^0.1.4",
