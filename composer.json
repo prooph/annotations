@@ -1,5 +1,5 @@
 {
-    "name": "prooph/annotation",
+    "name": "prooph/annotations",
     "description": "Adds annotation support to prooph",
     "type": "library",
     "authors": [
