@@ -37,7 +37,7 @@
         "malukenho/docheader": "^0.1.4",
         "phpunit/phpunit": "^6.0",
         "prooph/bookdown-template": "^0.2.3",
-        "prooph/event-store-bus-bridge": "3.0.x-dev",
+        "prooph/event-store-bus-bridge": "^3.0",
         "prooph/php-cs-fixer-config": "^0.1.1",
         "satooshi/php-coveralls": "^1.0",
         "friendsofphp/php-cs-fixer": "^2.0"
