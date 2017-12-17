@@ -35,7 +35,8 @@ class ModelInspector
      */
     protected function initializeHandlers($delegate)
     {
-        foreach (AnnotationUtils::getAnnotatedMethodsWithAttributes(get_class($delegate), CommandHandler::class) as list($method, $annotationAttributes)) {
+        $className = null === $delegate ? get_class() : get_class($delegate);
+        foreach (AnnotationUtils::getAnnotatedMethodsWithAttributes($className, CommandHandler::class) as list($method, $annotationAttributes)) {
             /** @var \ReflectionMethod $method */
             if ($annotationAttributes['commandName'] !== null) {
                 $commandName = $annotationAttributes['commandName'];
@@ -45,7 +46,7 @@ class ModelInspector
             $this->commandHandlers[$commandName] = new AnnotatedHandlerInvoker($delegate, $method);
         }
 
-        foreach (AnnotationUtils::getAnnotatedMethodsWithAttributes(get_class($delegate), EventHandler::class) as list($method, $annotationAttributes)) {
+        foreach (AnnotationUtils::getAnnotatedMethodsWithAttributes($className, EventHandler::class) as list($method, $annotationAttributes)) {
             /** @var \ReflectionMethod $method */
             if ($annotationAttributes['eventName'] !== null) {
                 $eventName = $annotationAttributes['eventName'];
