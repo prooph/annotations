@@ -31,11 +31,11 @@
         "prooph/common": "^4.1",
         "prooph/event-sourcing": "^5.0",
         "prooph/event-store": "^7.3.1",
-        "prooph/service-bus": "^6.2"
+        "prooph/service-bus": "^6.2",
+        "phpunit/phpunit": "v6.2.1"
     },
     "require-dev": {
         "malukenho/docheader": "^0.1.4",
-        "phpunit/phpunit": "^6.0",
         "prooph/bookdown-template": "^0.2.3",
         "prooph/event-store-bus-bridge": "^3.0",
         "prooph/php-cs-fixer-config": "^0.2.1",
@@ -48,7 +48,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Prooph\\Annotation\\": "tests"
+            "ProophTest\\Annotation\\": "tests"
         }
     }
 }
