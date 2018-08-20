@@ -6,6 +6,12 @@
 
 This package adds support for annotations to Prooph.
 
+## Important
+
+This library will receive support until December 31, 2019 and will then be deprecated.
+
+For further information see the official announcement here: [https://www.sasaprolic.com/2018/08/the-future-of-prooph-components.html](https://www.sasaprolic.com/2018/08/the-future-of-prooph-components.html)
+
 ## Features
 
 * Build aggregates and event listeners, almost without coupling to internal Prooph logic.
