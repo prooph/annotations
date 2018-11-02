@@ -1,9 +1,10 @@
 <?php
+
 /**
- * This file is part of the prooph/annotations package.
- * (c) 2017 Michiel Rook <mrook@php.net>
- * (c) 2017 prooph software GmbH <contact@prooph.de>
- * (c) 2017 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
+ * This file is part of prooph/annotations.
+ * (c) 2017-2018 Michiel Rook <mrook@php.net>
+ * (c) 2017-2018 prooph software GmbH <contact@prooph.de>
+ * (c) 2017-2018 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -72,7 +73,7 @@ class AnnotatedAggregate extends AggregateLifecycle implements AggregateTypeProv
     protected function apply(AggregateChanged $e)
     {
         if ($this->aggregate !== null) {
-            $invoker = $this->inspector->getEventHandler(get_class($e));
+            $invoker = $this->inspector->getEventHandler(\get_class($e));
             if ($invoker !== null) {
                 $invoker($e);
             }
@@ -94,13 +95,13 @@ class AnnotatedAggregate extends AggregateLifecycle implements AggregateTypeProv
      */
     public function getAggregateId()
     {
-        $properties = AnnotationUtils::getAnnotatedProperties(get_class($this->aggregate), AggregateIdentifier::class);
+        $properties = AnnotationUtils::getAnnotatedProperties(\get_class($this->aggregate), AggregateIdentifier::class);
 
         if (empty($properties)) {
-            throw new \RuntimeException(sprintf('Missing AggregateIdentifier annotation on aggregate root %s', get_class($this->aggregate)));
+            throw new \RuntimeException(\sprintf('Missing AggregateIdentifier annotation on aggregate root %s', \get_class($this->aggregate)));
         }
 
-        $property = reset($properties);
+        $property = \reset($properties);
         $property->setAccessible(true);
 
         return $property->getValue($this->aggregate);

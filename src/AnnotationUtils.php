@@ -1,9 +1,10 @@
 <?php
+
 /**
- * This file is part of the prooph/annotations package.
- * (c) 2017 Michiel Rook <mrook@php.net>
- * (c) 2017 prooph software GmbH <contact@prooph.de>
- * (c) 2017 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
+ * This file is part of prooph/annotations.
+ * (c) 2017-2018 Michiel Rook <mrook@php.net>
+ * (c) 2017-2018 prooph software GmbH <contact@prooph.de>
+ * (c) 2017-2018 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -41,7 +42,7 @@ class AnnotationUtils
     public static function getInstance(): self
     {
         AnnotationRegistry::registerLoader(function ($name) {
-            if (strpos($name, 'Prooph\\Annotation') === 0) {
+            if (\strpos($name, 'Prooph\\Annotation') === 0) {
                 return true;
             }
 
@@ -61,7 +62,7 @@ class AnnotationUtils
      */
     public static function getAnnotatedMethods($className, $annotation): array
     {
-        return array_map(function ($methodWithAnnotation) {
+        return \array_map(function ($methodWithAnnotation) {
             return $methodWithAnnotation[0];
         }, self::getAnnotatedMethodsWithAttributes($className, $annotation));
     }
